@@ -51,15 +51,28 @@ def procesarArchivo1(pruta, pseparador):
 
     """
     listaTokens = []
-    archivo = open(pruta, "r", estandar="utf-8")
-    lineaActual = archivo.readline()
-    while lineaActual != "":
-        lineaLimpia = lineaActual.strip()
-        if lineaLimpia != "" and pseparador in lineaLimpia:
-            partesLinea = lineaLimpia.split(pseparador)
-            parejaTokens = (partesLinea[0].strip(), partesLinea[1].strip())
-            listaTokens.append(parejaTokens)
-        lineaActual = archivo.readline() 
+    vistos = set()
+    archivo = open(pruta, "r", encoding="utf-8")
+    numLinea = 1
+    linea = archivo.readline()
+    while linea != "":
+        lineaLimpia = linea.strip()
+        if lineaLimpia != "":
+            if pseparador in lineaLimpia:
+                partes = lineaLimpia.split(pseparador)
+                if len(partes) == 2:
+                    token1 = partes[0].strip()
+                    token2 = partes[1].strip()
+                    pareja = (token1, token2)
+                    if pareja not in vistos:
+                        listaTokens.append(pareja)
+                        vistos.add(pareja)
+                else:
+                    print(f"Línea {numLinea} inválida: {lineaLimpia}")
+            else:
+                print(f"Línea {numLinea} sin separador: {lineaLimpia}")
+        linea = archivo.readline()
+        numLinea += 1
     archivo.close()
     return listaTokens
 
