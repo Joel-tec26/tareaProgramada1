@@ -1,2 +1,6 @@
 socrates_socrates
 Eustakio_Eustakio
+algo=algo
+algoams=algoams
+socrates=algo
+wea=algoams

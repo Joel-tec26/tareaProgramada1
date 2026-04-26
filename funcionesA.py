@@ -35,7 +35,7 @@ def guardarTokensEnArchivoAux(ptokens):
 def guardarTokensEnArchivo(ptokensm, parchivo, pseparador):
     archivo=open(f"{parchivo}.txt","a")
     for i in ptokensm:
-        archivo.write(f"{i[1]}{pseparador}{i[1]}\n")
+        archivo.write(f"{i[0]}{pseparador}{i[1]}\n")
     archivo.close()
     return
 
@@ -114,6 +114,4 @@ def filtrarPorPalabraClave(ppalabra):
     bitacora.close()
     return encontrar
 
-
-submenubitacora()
-submenubitacora()
+guardarTokensEnArchivoAux([("socrates","algo"),("wea","algoams")])

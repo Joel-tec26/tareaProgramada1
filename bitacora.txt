@@ -20,3 +20,7 @@
 (26-04-25_14:45:55,selecciï¿½n de la opcion del submenï¿½ de bitacora del sistema 2: Acciones con algunas palabras clave)
 (26-04-25_14:46:17,selecciï¿½n de la opcion del submenï¿½ de bitacora del sistema 2: Acciones con algunas palabras clave)
 (26-04-25_14:48:24,selección de la opcion del submenú de bitacora del sistema 2: Acciones con algunas palabras clave)
+(26-04-25_15:56:14,seleccion de la opcion 2)
+(26-04-25_15:56:27,ejecución de la opcion 4: guardar tokens en archivo exitosa)
+(26-04-25_15:57:06,seleccion de la opcion 2)
+(26-04-25_15:57:11,ejecución de la opcion 4: guardar tokens en archivo exitosa)
