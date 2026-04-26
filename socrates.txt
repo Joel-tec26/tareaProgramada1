@@ -1,6 +1,2 @@
-socrates_socrates
-Eustakio_Eustakio
-algo=algo
-algoams=algoams
-socrates=algo
-wea=algoams
+pepe-asd
+fibonacci-euler
