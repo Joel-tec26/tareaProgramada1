@@ -1,2 +1,5 @@
 pepe-asd
 fibonacci-euler
+pepe=fuhrer
+fibonacci=xi jinping
+while=mientras
