@@ -86,7 +86,7 @@ def administradorOpcion1():
                 tokens = procesarArchivo1(ruta, separador)
                 print(f"\tCarga completada: {len(tokens)} tokens encontrados")
                 input("pulse ENTER para continuar: ")
-                return tokens, separador
+                return tokens
             except Exception :
                 print(" Caracteristica inesperada encontrada al leer el archivo")
         opcion = input("\n¿Desea intentar de nuevo con otra ruta? \nDigite (1) para continuar \nDigite (2) para salir: ")
@@ -126,11 +126,11 @@ def solicitarNuevosTokensSeguros():
         print ("="*30)
         print("\n--- Registro de Tokens Personalizado ---")
         separadorElegido = input("Digite el separador que vaya a usar: ").strip()
-        while validardivision(separadorElegido):
+        while not validardivision(separadorElegido):
             print("Formato incorrecto. \nEl separador debe ser exactamente un símbolo (ni letras, ni números, ni espacios. ")
             separadorElegido = input("Digite el separador que vaya a usar: ").strip()
-        print(f"\n2. Ingrese los tokens usando el separador ecogido: {separadorElegido}  \n(ejemplo: if{separadorElegido}si)")
-        nuevaCadena = input(" Ingrese la caadena de tokens que desea añadir: ").strip()
+        print(f"\nIngrese los tokens usando el separador ecogido: {separadorElegido}  \n(ejemplo: if{separadorElegido}si)")
+        nuevaCadena = input(" Ingrese la cadena de tokens que desea añadir: ").strip()
         bloques = nuevaCadena.split()
         todoCorrecto = True
         for linea in bloques:
@@ -152,7 +152,7 @@ def procesarActualizacionDeTokens(pcadenaNueva, pseparador, plistaTokens):
         valor = partes[1].strip()
         indice = buscarToken(llave, plistaTokens)
         
-        if not indice == False:
+        if indice != False:
             print(f"El token existente: {llave}, ahora es: {valor}")
             plistaTokens[indice] = (llave, valor)
         else:
@@ -186,7 +186,7 @@ while True:
         listaGlobal = administradorOpcion1()
     elif op == "2":
         listaGlobal = administradorOpcion2(listaGlobal)
-    elif op=="30":
+    elif op=="3":
         print(f"\nLista actual: {listaGlobal}")
     elif op == "4":
         break
