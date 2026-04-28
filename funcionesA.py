@@ -1,5 +1,8 @@
 from datetime import datetime
+from funcionesJ import *
 import re
+
+tokens=[]
 
 def adminMostrarTokens(ptokens):
     print ("="*30)
@@ -14,7 +17,6 @@ def adminMostrarTokens(ptokens):
     input("Precione ENTER para continuar")
     return
     
-
 def mostrarTokens(ptokens):
     if ptokens==[]:
         return False
@@ -221,5 +223,17 @@ def filtrarPorPalabraClave(ppalabra):
 
 
 # print(pruebaTokens, cambios)
-submenubitacora()
 # adminGenerarReporteCSV(cambios)
+
+#testeo menu
+
+while True:
+    opcion = input()
+    if opcion=="1":
+        tokens=administradorOpcion1()
+    elif opcion=="2":
+        adminMostrarTokens(tokens)
+    elif opcion=="3":
+        tokens=administradorOpcion2(tokens)
+    elif opcion=="4":
+        validarGuardarTokensEnArchivo(tokens)

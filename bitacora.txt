@@ -107,3 +107,7 @@
 (2026-04-27_10:00:13,selección de la opcion del submenú de bitacora del sistema 2: Acciones con algunas palabras clave)
 (2026-04-27_10:00:15,Error al filtrar cada registro de la bitácora: no se encontró la palabra que puso el usuario)
 (2026-04-27_10:00:16,selección de la opcion del submenú de bitacora del sistema 3: Salir del submenú)
+(2026-04-28_15:10:12,Ejecución exitosa de la opcion 2: mostrar tokens)
+(2026-04-28_15:13:54,Ejecución exitosa de la opcion 2: mostrar tokens)
+(2026-04-28_15:16:23,Seleccion de la opcion 2)
+(2026-04-28_15:16:56,ejecución exitosa de la opcion 4: guardar tokens en archivo)
