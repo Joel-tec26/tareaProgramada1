@@ -171,8 +171,58 @@ def administradorOpcion2(plistaTokens):
         input("pulse ENTER para continuar: ")
     return plistaTokens
 
+# traduccion:
+def validarTraduccionPalabra(pPalabra, pListaTokens):
+    """
+    """
+    if pPalabra.isdigit():
+        return pPalabra
+    for original, traduccion in pListaTokens:
+        if original == pPalabra:
+            return traduccion
+    return pPalabra
 
-# Programa principal de pruebas
+def procesarContenidoLinea(pLinea, pListaTokens):
+    """
+    """
+    partes = re.split(r'([^a-zA-Z0-9áéíóúÁÉÍÓÚ])', pLinea)
+    lineaTraducida = ""
+    for fragmento in partes:
+        if fragmento: 
+            if fragmento.isalnum():
+                resultado = validarTraduccionPalabra(fragmento, pListaTokens)
+                lineaTraducida += resultado
+            else:
+                lineaTraducida += fragmento
+    return lineaTraducida
+
+def administradorOpcion5(pListaTokens):
+    """
+    """
+    print ("="*30)
+    print ("Opción 5")
+    print ("="*30)
+    print("\n---Traducción de codigo ---")
+    nombreOrigen = input("Digite el nombre del archivo a traducir: ")
+    
+    if os.path.exists(nombreOrigen):
+        nombreDestino = input("Digite el nombre del nuevo archivo: ")
+        try:
+            archivoLectura = open(nombreOrigen, "r", encoding="utf-8")
+            archivoEscritura = open(nombreDestino, "w", encoding="utf-8")
+            
+            for linea in archivoLectura:
+                nuevaLinea = procesarContenidoLinea(linea, pListaTokens)
+                archivoEscritura.write(nuevaLinea)
+                
+            archivoLectura.close()
+            archivoEscritura.close()
+            print(f"\nÉxito: Archivo '{nombreDestino}' creado.")
+            
+        except Exception as e:
+            print(f"Error al procesar: {e}")
+    else:
+        print("El archivo de origen no existe.")
 
 listaGlobal = []
 while True:
@@ -181,6 +231,7 @@ while True:
     print("2. Agregar/Actualizar")
     print("3. Ver Lista")
     print("4. Salir")
+    print("5. traducir codigo")
     op = input("Seleccione: ")
     if op == "1":
         listaGlobal = administradorOpcion1()
@@ -190,3 +241,5 @@ while True:
         print(f"\nLista actual: {listaGlobal}")
     elif op == "4":
         break
+    elif op == "5":
+        administradorOpcion5(listaGlobal)
