@@ -1,6 +1,6 @@
 #Creado por: Joel Jesús Porras Muñoz y Alexis Torres
-# Fecha de creación: 26/04/2026 8:20am
-# Ultíma modificación: 
+# Fecha de creación: 21/04/2026 8:20am
+# Ultíma modificación: 30/04/2026 
 # Versión: 3.14
 
 # importaciones de metodos
@@ -34,7 +34,7 @@ def solicitarCargaTokens():
     print ("="*30)
     print ("Opción 1")
     print ("="*30)
-    print("\n--- Configuración de Carga de Diccionario ---")
+    print("\n--- Configuración de Carga de tokens ---")
     pruta = input("\nPor favor, ingrese el nombre del archivo de tokens: ")
     while True:
         pseparador = input("Ingrese el símbolo que separa las palabras (solo 1 símbolo): ")
@@ -214,6 +214,7 @@ def administradorOpcion5(pListaTokens):
     if os.path.exists(nombreOrigen):
         nombreDestino = input("Digite el nombre del nuevo archivo: ")
         try:
+            inicio = datetime.now()
             archivoLectura = open(nombreOrigen, "r", encoding="utf-8")
             archivoEscritura = open(nombreDestino, "w", encoding="utf-8")
 
@@ -223,15 +224,18 @@ def administradorOpcion5(pListaTokens):
                 totalPalabras += conteo
             archivoLectura.close()
             archivoEscritura.close()
+            fin = datetime.now()
+            duracion = fin - inicio
+            segundosTotales = duracion.total_seconds()
             print(f"\nArchivo: {nombreDestino}, creado.")
             print(f"Palabras totales detectadas: {totalPalabras}")
-            return totalPalabras
+            return totalPalabras, segundosTotales
         except Exception as e:
             print(f"Error al procesar: {e}")
-            return 0
+            return 0, 0 
     else:
         print("El archivo de origen no existe.")
-        return 0
+        return 0, 0
 
 # reporte HTML
 def calcularEstadisticas(pListaTokens, pTotalPalabras):
@@ -244,7 +248,7 @@ def calcularEstadisticas(pListaTokens, pTotalPalabras):
         porcentaje = 0
     return totalReemplazos, porcentaje
 
-def CuerpoHTML(pTituloPestanna, pFechaHora, pEstadisticas, pListaTokens):
+def CuerpoHTML(pTituloPestanna, pFechaHora, pEstadisticas, pListaTokens, ptiempoTraduccion):
     totalR, porcR = pEstadisticas
     html = "<html>\n<head>\n  <title>" + pTituloPestanna + "</title>\n</head>\n<body>\n"
     html += '  <h1 align="center">Reporte de Traducción</h1>\n'
@@ -252,7 +256,8 @@ def CuerpoHTML(pTituloPestanna, pFechaHora, pEstadisticas, pListaTokens):
     html += '  <p align="center">\n'
     html += '    <b>Estadísticas del proceso:</b><br>\n'
     html += '    Cantidad total de reemplazos: ' + str(totalR) + '<br>\n'
-    html += '    Porcentaje de palabras reemplazadas: ' + str(round(porcR, 2)) + '%\n'
+    html += '    Porcentaje de palabras reemplazadas: ' + str(round(porcR, 2)) + '%<br>\n'
+    html += '    Duración de la traducción: ' + str(round(ptiempoTraduccion, 4)) + ' segundos\n' 
     html += '  </p>\n'
     html += '  <table border="1" align="center" width="80%">\n'
     html += '    <tr bgcolor="#CCCCCC">\n      <th>Palabra Original</th>\n      <th>Reemplazo</th>\n      <th>Cantidad</th>\n    </tr>\n'
@@ -269,7 +274,7 @@ def CuerpoHTML(pTituloPestanna, pFechaHora, pEstadisticas, pListaTokens):
     html += "  </table>\n</body>\n</html>"
     return html
 
-def administradorOpcion7(pListaTokens, pTotalPalabras):
+def administradorOpcion7(pListaTokens, pTotalPalabras, ptiempoTraduccion):
     print ("="*30)
     print ("Opción 7")
     print ("="*30)
@@ -280,7 +285,7 @@ def administradorOpcion7(pListaTokens, pTotalPalabras):
     fechaArch = ahora.strftime("%d-%m-%y_%H-%M-%S")    
     nombreArchivo = "reporteHTML_" + fechaArch + ".html"
     estadisticas = calcularEstadisticas(pListaTokens, pTotalPalabras)
-    contenidoFinal = CuerpoHTML(tituloUsuario, fechaH2, estadisticas, pListaTokens)
+    contenidoFinal = CuerpoHTML(tituloUsuario, fechaH2, estadisticas, pListaTokens, ptiempoTraduccion)
     try:
         archivoFinal = open(nombreArchivo, "w", encoding="utf-8")
         archivoFinal.write(contenidoFinal)
@@ -291,7 +296,7 @@ def administradorOpcion7(pListaTokens, pTotalPalabras):
 
 listaGlobal = []
 palabras = 0 
-
+tiempoTraduccion = 0
 while True:
     print("\n Menu tester")
     print("1. cargar")
@@ -311,6 +316,6 @@ while True:
     elif op == "4":
         break
     elif op == "5":
-        palabras = administradorOpcion5(listaGlobal)
+        palabras, tiempoTraduccion = administradorOpcion5(listaGlobal)
     elif op == "6":
-        palabras = administradorOpcion7(listaGlobal, palabras)
+        palabras = administradorOpcion7(listaGlobal, palabras, tiempoTraduccion)
