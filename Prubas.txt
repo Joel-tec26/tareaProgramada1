@@ -50,15 +50,3 @@ list:lista
 dict:diccionario
 set:conjunto
 tuple:tupla
-
-
-# Casos de Error y Símbolos
-comentario_sin_separador
-formato:incorrecto:extra:partes
-vacío:
-:vacío
-ámbito:scope
-función:function
-parámetro:parameter
-# El siguiente es un duplicado para probar tu set()
-if:si
