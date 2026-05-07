@@ -5,8 +5,8 @@
 
 # importaciones de metodos
 import re
-import os
 from datetime import datetime
+
 
 # definicion de funciones 
 
@@ -80,14 +80,14 @@ def buscarToken(palabraBuscada, plistaDeTokens):
     -plistaDeTokens(list): lista de tokens donde se realizará la búsqueda
     Salidas:
     -posicionActual(int): posición donde se encuentra el token
-    -resultado(bool): False si el token no existe en la lista
+    -resultado(-1): si el token no existe en la lista
     """
     posicionActual = 0
     for pareja in plistaDeTokens:
         if pareja[0] == palabraBuscada:
             return posicionActual
         posicionActual += 1
-    return False
+    return -1
 
 def procesarActualizacionDeTokens(pcadenaNueva, pseparador, plistaTokens):
     """
@@ -110,7 +110,7 @@ def procesarActualizacionDeTokens(pcadenaNueva, pseparador, plistaTokens):
             llave = partes[0].strip()
             valor = partes[1].strip()
             indice = buscarToken(llave, plistaTokens)
-            if indice != False:
+            if indice != -1:
                 print(f"El token existente: {llave}, ahora es: {valor}")
                 plistaTokens[indice] = (llave, valor, 0)
             else:
@@ -118,6 +118,7 @@ def procesarActualizacionDeTokens(pcadenaNueva, pseparador, plistaTokens):
                 plistaTokens.append((llave, valor, 0))
         return plistaTokens
     else:
+        inservarEnBitacora("El usuario cancelo el proceso de actualización de tokens")
         print ("Proceso cancelado")
         return plistaTokens
 
@@ -321,13 +322,22 @@ def filtrarPorPalabraClave1(ppalabra):
     -resultado(bool): True si se encontraron coincidencias, False en caso contrario
     -mensaje(str): registros encontrados mostrados en pantalla
     """
-    encontrar=False
-    bitacora=open("bitacora.txt","r", encoding="utf-8")
-    for i in bitacora.readlines():
-        texto = i.split(",")[1]
-        for palabra in texto.split():
-            if re.sub(r'[^a-zA-Zá-úä-üÁ-ÚÄ-Ü0-9\s]', '', palabra) == ppalabra:
-                print(i)
-                encontrar=True
+    import os
+    encontrar = False
+    if not os.path.exists("bitacora.txt"):
+        return False
+    bitacora = open("bitacora.txt", "r", encoding="utf-8")
+    for i in bitacora:
+        linea = i.strip()
+        if not linea or "," not in linea:
+            continue 
+        partes = linea.split(",")
+        if len(partes) >= 2:
+            texto = partes[1]
+            for palabra in texto.split():
+                palabraLimpia = re.sub(r'[^a-zA-Zá-úä-üÁ-ÚÄ-Ü0-9]', '', palabra)
+                if palabraLimpia == ppalabra:
+                    print(linea) 
+                    encontrar = True
     bitacora.close()
     return encontrar

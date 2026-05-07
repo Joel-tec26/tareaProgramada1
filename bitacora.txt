@@ -34,3 +34,5 @@
 (2026-05-06_20:01:02,Ejecución exitosa de la opcion 2: mostrar tokens)
 (2026-05-06_20:01:17,Nuevo bloque de Tokens actualizado en la lista global)
 (2026-05-06_20:01:23,Ejecución exitosa de la opcion 2: mostrar tokens)
+(2026-05-06_20:13:55,selección de la opcion del submenú de bitacora del sistema 3: Salir del submenú)
+(2026-05-06_20:14:58,El usuario salio del sistema)

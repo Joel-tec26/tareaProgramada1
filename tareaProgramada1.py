@@ -7,6 +7,7 @@
 from funciones1 import *
 import os
 from datetime import datetime
+import re
 
 # Variables globales
 listaTokens = []
@@ -61,6 +62,7 @@ def validarFormato(pbloque, pseparador):
         return False, f"Al bloque: {pbloque} le falta el separador: {pseparador}."
     partes = pbloque.split(pseparador)
     if len(partes) != 2 or partes[0].strip() == "" or partes[1].strip() == "":
+        inservarEnBitacora("Formato incompleto o incorrecto en el nuevo bloque de actualización de tokens")
         return False, f"El bloque: {pbloque} tiene un formato incompleto o incorrecto."
     return True, ""
 
@@ -73,7 +75,7 @@ def validarListaTokens(pTokens):
     Salidas:
     -resultado(bool): True si la lista contiene elementos, False si está vacía
     """
-    return pTokens != []
+    return bool(pTokens != [])
 
 def validarNombreArchivo(pArchivo):
     """
@@ -101,8 +103,6 @@ def validarSeparadorAux(pSeparador):
         return False
     return True 
 
-
-
 # Función 1: cargar tokens
 def solicitarCargaTokens():
     """
@@ -121,7 +121,7 @@ def solicitarCargaTokens():
     print ("Opción 1")
     print ("="*30)
     print("\n--- Configuración de Carga de tokens ---")
-    pruta = input("\nPor favor, ingrese el nombre del archivo de tokens: ")
+    pruta = input("\nPor favor, ingrese el nombre del archivo de tokens con su extención de archivo: ")
     while True:
         pseparador = input("Ingrese el símbolo que separa las palabras (solo 1 símbolo): ")
         if validardivision(pseparador):
@@ -149,10 +149,12 @@ def administradorOpcion1():
             try:
                 tokens = procesarArchivo1(ruta, separador)
                 print(f"\tCarga completada: {len(tokens)} tokens encontrados")
+                inservarEnBitacora("Carga completa de tokens en la lista global")
                 input("Presione ENTER para continuar: ")
                 return tokens
             except Exception :
                 print(" Caracteristica inesperada encontrada al leer el archivo")
+                inservarEnBitacora("Caracteristica inesperada encontrada al leer el archivo")
         opcion = input("\n¿Desea intentar de nuevo con otra ruta? \nDigite (1) para continuar \nDigite (2) para salir: ")
         if opcion != "1":
             print("Operación cancelada.")
@@ -204,6 +206,7 @@ def solicitarNuevosTokensSeguros():
         separadorElegido = input("Digite el separador que vaya a usar: ").strip()
         while not validardivision(separadorElegido):
             print("Formato incorrecto. \nEl separador debe ser exactamente un símbolo (ni letras, ni números, ni espacios. ")
+            inservarEnBitacora("Ingreso un separador de Tokens incorrecto")
             separadorElegido = input("Digite el separador que vaya a usar: ").strip()
         print(f"\nIngrese los tokens usando el separador ecogido: {separadorElegido}  \n(ejemplo: if{separadorElegido}si)")
         nuevaCadena = input(" Ingrese la cadena de tokens que desea añadir: ").strip()
@@ -216,6 +219,7 @@ def solicitarNuevosTokensSeguros():
                 todoCorrecto = False
                 break
         if todoCorrecto:
+            inservarEnBitacora("Nuevo bloque de Tokens actualizado en la lista global")
             return nuevaCadena, separadorElegido
 
 def administradorOpcion3(plistaTokens):
@@ -256,13 +260,12 @@ def administradorOpcion4(pTokens):
     print("=" * 30)
     print("Opción 4")
     print("=" * 30)
-    inservarEnBitacora("\n--- Guardado de Tokens ---")
     if not validarListaTokens(pTokens):
         inservarEnBitacora("Error al guardar tokens en archivo(opcion 4): no habian tokens")
         print("No hay tokens")
         input("Presione ENTER para continuar ")
         return
-    archivo = input("Ingrese el nombre del archivo que desee para guardar tokens: ")
+    archivo = input("Ingrese el nombre del archivo que desee para guardar tokens (sin extensión de archivo): ")
     if not validarNombreArchivo(archivo):
         inservarEnBitacora("Error al guardar tokens en archivo(opcion 4): el usuario no ingresó un nombre")
         print("Debe escribir un nombre para el archivo")
@@ -299,36 +302,51 @@ def administradorOpcion5(pListaTokens):
     print ("Opción 5")
     print ("="*30)
     print("\n---Traducción de codigo ---")
-    nombreOrigen = input("Digite el nombre del archivo a traducir: ")
-    for i in range(len(pListaTokens)):
-        pListaTokens[i] = (pListaTokens[i][0], pListaTokens[i][1], 0)
-    totalPalabras=0
-    if os.path.exists(nombreOrigen):
-        nombreDestino = input("Digite el nombre del nuevo archivo: ")
-        try:
-            inicio = datetime.now()
-            archivoLectura = open(nombreOrigen, "r", encoding="utf-8")
-            archivoEscritura = open(nombreDestino, "w", encoding="utf-8")
+    if validarListaTokens(pListaTokens): 
+        while True: 
+            nombreOrigen = input("Digite el nombre del archivo a traducir con su extención de archivo: ")
+            for i in range(len(pListaTokens)):
+                pListaTokens[i] = (pListaTokens[i][0], pListaTokens[i][1], 0)
+            totalPalabras=0
+            if os.path.exists(nombreOrigen):
+                nombreDestino = input("Digite el nombre del nuevo archivo: ")
+                try:
+                    inicio = datetime.now()
+                    archivoLectura = open(nombreOrigen, "r", encoding="utf-8")
+                    archivoEscritura = open(nombreDestino, "w", encoding="utf-8")
 
-            for linea in archivoLectura:
-                nuevaLinea, conteo = procesarContenidoLinea(linea, pListaTokens)
-                archivoEscritura.write(nuevaLinea)
-                totalPalabras += conteo
-            archivoLectura.close()
-            archivoEscritura.close()
-            fin = datetime.now()
-            duracion = fin - inicio
-            segundosTotales = duracion.total_seconds()
-            print(f"\nArchivo: {nombreDestino}, creado.")
-            print(f"Palabras totales detectadas: {totalPalabras}")
-            return totalPalabras, segundosTotales
-        except Exception as e:
-            print(f"Error al procesar: {e}")
-            return 0, 0 
+                    for linea in archivoLectura:
+                        nuevaLinea, conteo = procesarContenidoLinea(linea, pListaTokens)
+                        archivoEscritura.write(nuevaLinea)
+                        totalPalabras += conteo
+                    archivoLectura.close()
+                    archivoEscritura.close()
+                    fin = datetime.now()
+                    duracion = fin - inicio
+                    segundosTotales = duracion.total_seconds()
+                    print(f"\nArchivo: {nombreDestino}, creado.")
+                    print(f"Palabras totales detectadas: {totalPalabras}")
+                    inservarEnBitacora("Proceso de traducir codigo: completado con éxito")
+                    return totalPalabras, segundosTotales
+                except Exception as e:
+                    print(f"Error al procesar: {e}")
+                    inservarEnBitacora("Error en traducir codigo: problematica al procesar "+str(e))
+                    return 0, 0 
+            else:
+                print("El archivo de origen no existe.")
+                inservarEnBitacora("Error en traducir codigo: El archivo de origen no existe")
+                opcion = input("\n¿Desea intentar de nuevo con otra ruta? \nDigite (1) para continuar \nDigite (2) para salir: ")
+                if opcion != "1":
+                    inservarEnBitacora("Error en traducir codigo: el usuario cancelo la operación")
+                    print("Operación cancelada.")
+                    input("Presione ENTER para continuar: ")
+                    return 0, 0
     else:
-        print("El archivo de origen no existe.")
+        print("Lista de Tokens vacia, ingrese items antes de usar esta opción")
+        inservarEnBitacora("Error en traducir codigo : no habian tokens")
+        input("Presione ENTER para continuar: ")
         return 0, 0
-
+    
 # Función 6: Generar CSV
 def administradoropcion6(ptokens):
     """
@@ -385,8 +403,11 @@ def administradorOpcion7(pListaTokens, pTotalPalabras, ptiempoTraduccion):
         archivoFinal.write(contenidoFinal)
         archivoFinal.close()
         print("\nReporte generado con éxito: " + nombreArchivo)
+        inservarEnBitacora("Proceso de generar reporte HTML éxitoso")
     except Exception as e:
         print(" Ocurrió un error al crear el reporte: " + str(e) + " intente nuevamente")
+        inservarEnBitacora("Error en General HTML: problema al crear el reporte " + str(e))
+    return
 
 # Función 8: Submenú bitacora del sistema
 def submenubitacora():
@@ -508,10 +529,11 @@ while True:
     elif opcion=="6":
         administradoropcion6(listaTokens)
     elif opcion=="7":
-        cantidadPalabras = administradorOpcion7(listaTokens, cantidadPalabras, tiempoTraduccion)
+        administradorOpcion7(listaTokens, cantidadPalabras, tiempoTraduccion)
     elif opcion=="8":
         submenubitacora()
     elif opcion=="9":
+        inservarEnBitacora("El usuario salio del sistema")
         break
     else:
         print("\nopción inválida")
