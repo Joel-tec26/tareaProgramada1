@@ -130,7 +130,7 @@ def solicitarCargaTokens():
         else:
             print("El separador debe ser exactamente un símbolo (ni letras, ni números, ni espacios).")
 
-def administradorOpcion1():
+def administradorOpcion1(ptokens):
     """
     Funcionalidad:
     Administra el proceso de carga de tokens desde un archivo,
@@ -147,7 +147,7 @@ def administradorOpcion1():
         ruta, separador = solicitarCargaTokens()
         if validarExistencia(ruta):
             try:
-                tokens = procesarArchivo1(ruta, separador)
+                tokens = procesarArchivo1(ruta, separador, ptokens)
                 print(f"\tCarga completada: {len(tokens)} tokens encontrados")
                 inservarEnBitacora("Carga completa de tokens en la lista global")
                 input("Presione ENTER para continuar: ")
@@ -517,7 +517,7 @@ while True:
     opcion = input("Seleccione la opcion deseada: ")
 
     if opcion=="1":
-        listaTokens = administradorOpcion1()
+        listaTokens = administradorOpcion1(listaTokens)
     elif opcion=="2":
         administradoropcion2(listaTokens)
     elif opcion=="3":

@@ -11,8 +11,25 @@ from datetime import datetime
 # definicion de funciones 
 
 # funciones opción 1 del menú 
+def buscarToken(palabraBuscada, plistaDeTokens):
+    """
+    Funcionalidad:
+    Busca un token específico dentro de la lista de tokens.
+    Entradas:
+    -palabraBuscada(str): token que se desea localizar
+    -plistaDeTokens(list): lista de tokens donde se realizará la búsqueda
+    Salidas:
+    -posicionActual(int): posición donde se encuentra el token
+    -resultado(-1): si el token no existe en la lista
+    """
+    posicionActual = 0
+    for pareja in plistaDeTokens:
+        if pareja[0] == palabraBuscada:
+            return posicionActual
+        posicionActual += 1
+    return -1
 
-def procesarArchivo1(pruta, pseparador):
+def procesarArchivo1(pruta, pseparador, ptokens):
     """
     Funcionalidad:
     Lee un archivo de texto, extrae tokens separados por un símbolo específico
@@ -24,31 +41,30 @@ def procesarArchivo1(pruta, pseparador):
     -listaTokens(list): lista de tuplas con tokens válidos encontrados
     -mensaje(str): mensajes mostrados en pantalla sobre líneas inválidas o sin separador
     """
-    listaTokens = []
-    vistos = set()
     archivo = open(pruta, "r", encoding="utf-8")
     numLinea = 1
-    linea = archivo.readline()
-    while linea != "":
+    for linea in archivo:
         lineaLimpia = linea.strip()
         if lineaLimpia != "":
             if pseparador in lineaLimpia:
-                partes = lineaLimpia.split(pseparador)
-                if len(partes) == 2:
-                    token1 = partes[0].strip()
-                    token2 = partes[1].strip()
-                    pareja = (token1, token2, 0)
-                    if pareja not in vistos:
-                        listaTokens.append(pareja)
-                        vistos.add(pareja)
+                partes = lineaLimpia.split(pseparador, 1)
+                token1 = partes[0].strip()
+                token2 = partes[1].strip()
+                if token1 != "" and token2 != "":
+                    nuevaPareja = (token1, token2, 0)
+                    indice = buscarToken(token1, ptokens)
+                    if indice != -1:
+                        print(f"El token existente: {token1}, ahora es: {token2}")
+                        ptokens[indice] = nuevaPareja
+                    else:
+                        ptokens.append(nuevaPareja)
                 else:
-                    print(f"Línea {numLinea} inválida: {lineaLimpia}")
+                    print(f"Línea {numLinea} ignorada: El nombre del token es vacío.")
             else:
                 print(f"Línea {numLinea} sin separador: {lineaLimpia}")
-        linea = archivo.readline()
         numLinea += 1
     archivo.close()
-    return listaTokens
+    return ptokens
  
 # mostrar tokens
 
@@ -71,23 +87,6 @@ def mostrarTokens(ptokens):
 
 # agregar o actualizar tokens
 
-def buscarToken(palabraBuscada, plistaDeTokens):
-    """
-    Funcionalidad:
-    Busca un token específico dentro de la lista de tokens.
-    Entradas:
-    -palabraBuscada(str): token que se desea localizar
-    -plistaDeTokens(list): lista de tokens donde se realizará la búsqueda
-    Salidas:
-    -posicionActual(int): posición donde se encuentra el token
-    -resultado(-1): si el token no existe en la lista
-    """
-    posicionActual = 0
-    for pareja in plistaDeTokens:
-        if pareja[0] == palabraBuscada:
-            return posicionActual
-        posicionActual += 1
-    return -1
 
 def procesarActualizacionDeTokens(pcadenaNueva, pseparador, plistaTokens):
     """
@@ -136,7 +135,7 @@ def procesarGuardadoTokens(pTokensm, pArchivo, pSeparador):
     Salidas:
     -archivo(txt): archivo de texto generado con los tokens almacenados
     """
-    archivoObjeto = open(f"{pArchivo}.txt", "a", encoding="utf-8")
+    archivoObjeto = open(f"{pArchivo}.txt", "a", encoding="utf-8")  #No se dijo el formato en la TP1 por tanto decidimos guardarlo en automatico a .txt
     for i in pTokensm:
         archivoObjeto.write(f"{i[0]}{pSeparador}{i[1]}\n")
     archivoObjeto.close()

@@ -50,5 +50,3 @@ list:lista
 dict:diccionario
 set:conjunto
 tuple:tupla
-vacio: 
- :vacio
