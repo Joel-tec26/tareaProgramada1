@@ -8,31 +8,21 @@ import re
 import os
 from datetime import datetime
 
-
 # definicion de funciones 
-def validardivision (pcaracter):
-    """
-
-    """
-    patron = r'^[^\d\s\w]$'
-    return bool(re.match(patron, pcaracter))
-
-def validarExistencia(pruta):
-    """
-    
-    """
-    if os.path.exists(pruta):
-        return True
-    else:
-        print(f"No se encontró el archivo {pruta} en los archivos.")
-        return False
 
 # funciones opción 1 del menú 
 
-
 def procesarArchivo1(pruta, pseparador):
     """
-
+    Funcionalidad:
+    Lee un archivo de texto, extrae tokens separados por un símbolo específico
+    y almacena únicamente los tokens válidos y no repetidos.
+    Entradas:
+    -pruta(str): ruta o nombre del archivo que contiene los tokens
+    -pseparador(str): símbolo utilizado para separar los tokens
+    Salidas:
+    -listaTokens(list): lista de tuplas con tokens válidos encontrados
+    -mensaje(str): mensajes mostrados en pantalla sobre líneas inválidas o sin separador
     """
     listaTokens = []
     vistos = set()
@@ -59,13 +49,18 @@ def procesarArchivo1(pruta, pseparador):
         numLinea += 1
     archivo.close()
     return listaTokens
-
-
-        
+ 
 # mostrar tokens
 
 def mostrarTokens(ptokens):
     """
+    Funcionalidad:
+    Muestra en pantalla la lista de tokens y sus traducciones.
+    Entradas:
+    -ptokens(list): lista de tokens almacenados
+    Salidas:
+    -resultado(bool): True si existen tokens para mostrar, False si la lista está vacía
+    -mensaje(str): impresión en pantalla de los tokens y traducciones
     """
     if ptokens==[]:
         return False
@@ -78,6 +73,14 @@ def mostrarTokens(ptokens):
 
 def buscarToken(palabraBuscada, plistaDeTokens):
     """
+    Funcionalidad:
+    Busca un token específico dentro de la lista de tokens.
+    Entradas:
+    -palabraBuscada(str): token que se desea localizar
+    -plistaDeTokens(list): lista de tokens donde se realizará la búsqueda
+    Salidas:
+    -posicionActual(int): posición donde se encuentra el token
+    -resultado(bool): False si el token no existe en la lista
     """
     posicionActual = 0
     for pareja in plistaDeTokens:
@@ -86,11 +89,18 @@ def buscarToken(palabraBuscada, plistaDeTokens):
         posicionActual += 1
     return False
 
-
-
-
 def procesarActualizacionDeTokens(pcadenaNueva, pseparador, plistaTokens):
     """
+    Funcionalidad:
+    Agrega nuevos tokens o actualiza tokens existentes en la lista principal.
+    Entradas:
+    -pcadenaNueva(str): cadena con los nuevos tokens ingresados por el usuario
+    -pseparador(str): símbolo separador utilizado entre token y traducción
+    -plistaTokens(list): lista actual de tokens
+    -confirmacion(str): confirmación ingresada por el usuario para continuar o cancelar
+    Salidas:
+    -plistaTokens(list): lista de tokens actualizada
+    -mensaje(str): mensajes mostrados en pantalla sobre actualizaciones, inserciones o cancelación
     """
     confirmacion= input("¿Desea continuar en el proceso? \nDigite [1] para continuar o [2] para cancelar el proceso: ")
     if confirmacion == "1":
@@ -100,7 +110,6 @@ def procesarActualizacionDeTokens(pcadenaNueva, pseparador, plistaTokens):
             llave = partes[0].strip()
             valor = partes[1].strip()
             indice = buscarToken(llave, plistaTokens)
-            
             if indice != False:
                 print(f"El token existente: {llave}, ahora es: {valor}")
                 plistaTokens[indice] = (llave, valor, 0)
@@ -117,6 +126,14 @@ def procesarActualizacionDeTokens(pcadenaNueva, pseparador, plistaTokens):
 
 def procesarGuardadoTokens(pTokensm, pArchivo, pSeparador):
     """
+    Funcionalidad:
+    Guarda los tokens en un archivo de texto utilizando un separador definido.
+    Entradas:
+    -pTokensm(list): lista de tokens que se desea guardar
+    -pArchivo(str): nombre del archivo destino
+    -pSeparador(str): símbolo separador entre token y traducción
+    Salidas:
+    -archivo(txt): archivo de texto generado con los tokens almacenados
     """
     archivoObjeto = open(f"{pArchivo}.txt", "a", encoding="utf-8")
     for i in pTokensm:
@@ -127,6 +144,14 @@ def procesarGuardadoTokens(pTokensm, pArchivo, pSeparador):
 
 def TraduccionPalabra2(pPalabra, pListaTokens):
     """
+    Funcionalidad:
+    Traduce una palabra utilizando la lista de tokens y actualiza
+    la cantidad de reemplazos realizados.
+    Entradas:
+    -pPalabra(str): palabra que se desea traducir
+    -pListaTokens(list): lista de tokens disponibles para traducción
+    Salidas:
+    -traduccion(str): palabra traducida o palabra original si no existe traducción
     """
     if pPalabra.isdigit():
         return pPalabra
@@ -141,6 +166,15 @@ def TraduccionPalabra2(pPalabra, pListaTokens):
 
 def procesarContenidoLinea(pLinea, pListaTokens):
     """
+    Funcionalidad:
+    Procesa una línea de texto, traduce las palabras utilizando
+    los tokens disponibles y cuenta las palabras procesadas.
+    Entradas:
+    -pLinea(str): línea de texto que se desea procesar
+    -pListaTokens(list): lista de tokens utilizados para la traducción
+    Salidas:
+    -lineaTraducida(str): línea traducida
+    -conteoPalabrasLinea(int): cantidad de palabras procesadas en la línea
     """
     partes = re.split(r'([^a-zA-Z0-9áéíóúÁÉÍÓÚ])', pLinea)
     lineaTraducida = ""
@@ -158,9 +192,17 @@ def procesarContenidoLinea(pLinea, pListaTokens):
 
 #generar reporte CSV
 
-
-
 def generarReporteCSV(pcambios):
+    """
+    Funcionalidad:
+    Genera un archivo CSV con el registro de palabras reemplazadas
+    y la cantidad de veces que fueron traducidas.
+    Entradas:
+    -pcambios(list): lista de tokens con información de reemplazos
+    Salidas:
+    -archivo(csv): archivo CSV generado con el reporte
+    -resultado(bool): True si el proceso finaliza correctamente
+    """
     archivo = open("reporte.csv","a", encoding="utf-8")
     for i in pcambios:
         if i[2]>0:
@@ -171,6 +213,16 @@ def generarReporteCSV(pcambios):
 #generar reporte HTML
 
 def calcularEstadisticas(pListaTokens, pTotalPalabras):
+    """
+    Funcionalidad:
+    Calcula estadísticas relacionadas con el proceso de traducción.
+    Entradas:
+    -pListaTokens(list): lista de tokens con cantidades de reemplazo
+    -pTotalPalabras(int): cantidad total de palabras procesadas
+    Salidas:
+    -totalReemplazos(int): cantidad total de reemplazos realizados
+    -porcentaje(float): porcentaje de palabras reemplazadas
+    """
     totalReemplazos = 0
     for tupla in pListaTokens:
         totalReemplazos += tupla[2] 
@@ -181,6 +233,18 @@ def calcularEstadisticas(pListaTokens, pTotalPalabras):
     return totalReemplazos, porcentaje
 
 def CuerpoHTML(pTituloPestanna, pFechaHora, pEstadisticas, pListaTokens, ptiempoTraduccion):
+    """
+    Funcionalidad:
+    Construye el contenido HTML de un reporte de traducción.
+    Entradas:
+    -pTituloPestanna(str): título del reporte HTML
+    -pFechaHora(str): fecha y hora de generación del reporte
+    -pEstadisticas(tupla): estadísticas del proceso de traducción
+    -pListaTokens(list): lista de tokens con información de reemplazos
+    -ptiempoTraduccion(float): tiempo total de traducción
+    Salidas:
+    -html(str): contenido HTML completo del reporte
+    """
     totalR, porcR = pEstadisticas
     html = "<html>\n<head>\n  <title>" + pTituloPestanna + "</title>\n</head>\n<body>\n"
     html += '  <h1 align="center">Reporte de Traducción</h1>\n'
@@ -210,6 +274,14 @@ def CuerpoHTML(pTituloPestanna, pFechaHora, pEstadisticas, pListaTokens, ptiempo
 # submenú bitacora
 
 def inservarEnBitacora(pdescripcion):
+    """
+    Funcionalidad:
+    Registra una acción o evento dentro del archivo de bitácora del sistema.
+    Entradas:
+    -pdescripcion(str): descripción del evento que se desea registrar
+    Salidas:
+    -archivo(txt): actualización del archivo bitacora.txt con el nuevo registro
+    """
     fecha=datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
     bitacora=open("bitacora.txt","a", encoding="utf-8")
     bitacora.write(f"({fecha},{pdescripcion})\n")
@@ -217,6 +289,16 @@ def inservarEnBitacora(pdescripcion):
     return
 
 def filtrarPorDia(pfecha):
+    """
+    Funcionalidad:
+    Busca y muestra registros de la bitácora correspondientes
+    a una fecha específica.
+    Entradas:
+    -pfecha(str): fecha que se desea buscar en la bitácora
+    Salidas:
+    -resultado(bool): True si se encontraron registros, False en caso contrario
+    -mensaje(str): registros encontrados mostrados en pantalla
+    """
     bitacora=open("bitacora.txt","r", encoding="utf-8")
     encontrar=False
     for i in bitacora.readlines():
@@ -228,7 +310,17 @@ def filtrarPorDia(pfecha):
     bitacora.close()
     return encontrar
 
-def filtrarPorPalabraClave(ppalabra):
+def filtrarPorPalabraClave1(ppalabra):
+    """
+    Funcionalidad:
+    Busca y muestra registros de la bitácora que contengan
+    una palabra clave específica.
+    Entradas:
+    -ppalabra(str): palabra clave que se desea buscar
+    Salidas:
+    -resultado(bool): True si se encontraron coincidencias, False en caso contrario
+    -mensaje(str): registros encontrados mostrados en pantalla
+    """
     encontrar=False
     bitacora=open("bitacora.txt","r", encoding="utf-8")
     for i in bitacora.readlines():
