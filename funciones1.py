@@ -142,7 +142,7 @@ def procesarGuardadoTokens(pTokensm, pArchivo, pSeparador):
 
 #traducir codigo
 
-def TraduccionPalabra2(pPalabra, pListaTokens):
+def traduccionPalabra2(pPalabra, pListaTokens):
     """
     Funcionalidad:
     Traduce una palabra utilizando la lista de tokens y actualiza
@@ -182,7 +182,7 @@ def procesarContenidoLinea(pLinea, pListaTokens):
     for fragmento in partes:
         if fragmento: 
             if fragmento.isalnum():
-                resultado = TraduccionPalabra2(fragmento, pListaTokens)
+                resultado = traduccionPalabra2(fragmento, pListaTokens)
                 lineaTraducida += resultado
                 conteoPalabrasLinea += 1
             else:
@@ -232,7 +232,7 @@ def calcularEstadisticas(pListaTokens, pTotalPalabras):
         porcentaje = 0
     return totalReemplazos, porcentaje
 
-def CuerpoHTML(pTituloPestanna, pFechaHora, pEstadisticas, pListaTokens, ptiempoTraduccion):
+def cuerpoHTML(pTituloPestanna, pFechaHora, pEstadisticas, pListaTokens, ptiempoTraduccion):
     """
     Funcionalidad:
     Construye el contenido HTML de un reporte de traducción.

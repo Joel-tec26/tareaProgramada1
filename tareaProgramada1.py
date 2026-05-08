@@ -397,7 +397,7 @@ def administradorOpcion7(pListaTokens, pTotalPalabras, ptiempoTraduccion):
     fechaArch = ahora.strftime("%d-%m-%y_%H-%M-%S")    
     nombreArchivo = "reporteHTML_" + fechaArch + ".html"
     estadisticas = calcularEstadisticas(pListaTokens, pTotalPalabras)
-    contenidoFinal = CuerpoHTML(tituloUsuario, fechaH2, estadisticas, pListaTokens, ptiempoTraduccion)
+    contenidoFinal = cuerpoHTML(tituloUsuario, fechaH2, estadisticas, pListaTokens, ptiempoTraduccion)
     try:
         archivoFinal = open(nombreArchivo, "w", encoding="utf-8")
         archivoFinal.write(contenidoFinal)
